@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jt.manager.mapper.ItemMapper">
+	
+	<!--#,$的区别  
+	    #号可以有预编译效果，会为参数添加""，尽量使用
+	    $只有以字段名为参数时采用这个，不会添加"" "cid">200不会有结果
+	    
+	    sql语句尽量使用小写，linux平台严格区分大小写
+	  -->
+	<select id="findItemByPage" resultType="Item">
+		select * from tb_item order by created desc  limit #{start},#{rows}
+	</select>
+	<select id="findCount" resultType="int">
+		select count(*) from tb_item
+	</select>
+	
+	
+		<update id="updateStatus">
+		update tb_item set status=#{status} ,updated=now() where id in 
+		 <foreach collection="ids" open="(" close=")" item="id"  separator=",">
+		 #{id}
+		 </foreach>
+	   </update>
+
+	
+</mapper>

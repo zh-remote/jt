@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jt.cart.mapper.CartMapper">
+
+	<select id="findCartByUI" resultType="Cart" parameterType="cart">
+		select * from tb_cart where user_id=#{userId} and item_id=#{itemId}
+	</select>
+
+	<update id="updateCartByUI"
+		parameterType="com.jt.cart.pojo.Cart">
+		update tb_cart set
+		 
+			<if test="itemTitle !=null and itemTitle!=''">
+				itemTitle=#{itemTitle},
+			</if>
+			<if test="itemImage !=null and itemImage!=''">
+				itemImage=#{itemImage},
+			</if>
+			<if test="itemPrice !=null and itemPrice!=''">
+				itemPrice=#{itemPrice},
+			</if>
+			<if test="num !=null and num>0">
+				num=#{num},
+			</if>
+		
+		updated=now()
+		where user_id=#{userId} and item_id=#{itemId}
+	</update>
+</mapper>

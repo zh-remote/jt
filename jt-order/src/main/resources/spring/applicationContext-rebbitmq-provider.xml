@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/rabbit
+	http://www.springframework.org/schema/rabbit/spring-rabbit-1.4.xsd
+    http://www.springframework.org/schema/task  
+    http://www.springframework.org/schema/task/spring-task-4.1.xsd
+    http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+	
+	<!-- 异步的线程池，线程池的最在数不能设定太小，不然<rabbit:listener/>/@RabbitListener太多的话，会出现发无法正常消费问题 -->  
+    <task:executor id="taskExecutor" pool-size="4-256" queue-capacity="128" />  
+	
+	<!-- 定义RabbitMQ的连接工厂 -->
+	<rabbit:connection-factory id="connectionFactory"
+		host="${rabbit.ip}" port="${rabbit.port}" username="${rabbit.username}" password="${rabbit.password}"
+		virtual-host="${rabbit.vhost}" 
+		publisher-confirms="true"  
+        publisher-returns="true"  
+        channel-cache-size="5" 
+        executor="taskExecutor"/>
+
+	<!-- 定义Rabbit模板，指定连接工厂以及定义exchange -->
+	<rabbit:template id="amqpTemplate" connection-factory="connectionFactory"
+		exchange="orderExchange" />
+
+	<!-- MQ的管理，包括队列、交换器等 -->
+	<rabbit:admin connection-factory="connectionFactory" />
+
+	<!-- 定义交换器，自动声明交换机 ,durable持久化 -->
+	<rabbit:direct-exchange name="orderExchange" auto-declare="true" durable="true">
+	</rabbit:direct-exchange>
+	
+	
+	
+</beans>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns = "http://www.springframework.org/schema/beans"
+	xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo = "http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation = "http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://code.alibabatech.com/schema/dubbo
+		http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	
+	<!-- 1,设置应用名称 -->
+	<dubbo:application name="jt-provider-cart"/>
+	<!-- 2,设置服务注册中心zookeeper地址 -->
+	<dubbo:registry  address="zookeeper://192.168.174.135:2181"/>
+	 
+	<!-- 3,设置dubbo端口号 -->
+	<dubbo:protocol name="dubbo" port="20887"/>
+	<!-- 4,注册服务实现类对象-->
+	<bean class="com.jt.search.service.SearchServiceImpl" id="searchService"/>
+ 
+	<!-- 5,设置客户端能访问接口，像servlet注册-->
+	<dubbo:service interface="com.jt.search.service.SearchService" ref="searchService"/>
+
+	
+</beans>
